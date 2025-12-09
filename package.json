@@ -1,13 +1,6 @@
 {
   "name": "motherbase",
   "module": "src/main.ts",
-  "type": "module",
-  "private": true,
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
   "devDependencies": {
     "@types/bun": "latest",
     "vite": "^7.2.7"
@@ -15,7 +8,11 @@
   "peerDependencies": {
     "typescript": "^5"
   },
-  "dependencies": {
-    "aalib.js": "^2.0.0"
-  }
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "type": "module"
 }

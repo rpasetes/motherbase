@@ -124,14 +124,17 @@ export class VideoToASCII {
       }
     }
 
-    // Continue loop
-    this.animationId = requestAnimationFrame(() => this.render());
+    // Continue loop (only if not stopped)
+    if (this.animationId !== null) {
+      this.animationId = requestAnimationFrame(() => this.render());
+    }
   }
 
   start() {
     if (this.video.paused) {
       this.video.play();
     }
+    this.animationId = 1; // Initialize to non-null to allow render loop
     this.render();
   }
 
