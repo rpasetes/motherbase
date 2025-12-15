@@ -11,7 +11,13 @@
 
   <div id="content">
     <div class="photo-container">
-      <img src="/assets/russell.jpeg" alt="russell" border="1">
+      <img id="header-photo" alt="russell" border="1">
+      <script>
+        document.getElementById('header-photo').src =
+          location.hostname.includes('russellpasetes')
+            ? 'assets/professional.jpeg'
+            : 'assets/natural.jpeg';
+      </script>
     </div>
 
     <h1>hi, i'm russell</h1>
