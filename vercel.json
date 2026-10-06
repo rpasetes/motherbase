@@ -3,6 +3,6 @@
     { "source": "/blyg", "destination": "/blyg/", "permanent": true }
   ],
   "rewrites": [
-    { "source": "/blyg/:path*", "destination": "https://blyxt.blyxt.workers.dev/:path*" }
+    { "source": "/blyg/:path(.*)", "destination": "https://blyxt.blyxt.workers.dev/:path" }
   ]
 }
