@@ -5,5 +5,8 @@ export default defineConfig({
   publicDir: 'public',
   build: {
     outDir: 'dist',
+    rollupOptions: {
+      input: { home: 'index.html', cards: 'cards/index.html' },
+    },
   },
 })

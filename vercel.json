@@ -3,6 +3,26 @@
     { "source": "/blyg", "destination": "/blyg/", "permanent": true }
   ],
   "rewrites": [
-    { "source": "/blyg/:path(.*)", "destination": "https://blyxt.blyxt.workers.dev/:path" }
+    { "source": "/blyg/:path(.*)", "destination": "https://blyxt.blyxt.workers.dev/:path" },
+    { "source": "/cards", "destination": "/cards/index.html" },
+    { "source": "/cards/", "destination": "/cards/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/cards",
+      "headers": [
+        { "key": "Referrer-Policy", "value": "no-referrer" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" }
+      ]
+    },
+    {
+      "source": "/cards/:path*",
+      "headers": [
+        { "key": "Referrer-Policy", "value": "no-referrer" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" }
+      ]
+    }
   ]
 }
