@@ -12,7 +12,7 @@ The pinned Supabase client is bundled into the site. `src/cards/config.ts` conta
 
 Project: unfinished-business (`rrfrefhnfmtcamvvpeci`), Singapore, rpasetes-org.
 
-Enable **Authentication → Sign In / Providers → Allow anonymous sign-ins** in the Supabase dashboard. The migrations create the schema, explicit grants, RLS policies, invite functions and the `supabase_realtime` publication entry for `cards_questions`.
+**Authentication → Sign In / Providers → Allow anonymous sign-ins** is enabled in the Supabase dashboard. The migrations create the schema, explicit grants, RLS policies, invite functions and the `supabase_realtime` publication entry for `cards_questions`.
 
 - A browser gets an anonymous Supabase identity. The user chooses a display name, which is not a verified identity.
 - A new deck gets a cryptographically random 256-bit invitation. The database stores only its SHA-256 digest in a non-exposed schema.
@@ -40,3 +40,7 @@ For wider public distribution, enable CAPTCHA for anonymous sign-in (and pass it
 ## Rollback
 
 Revert the deck integration commit to remove `/cards` and its build entry point without changing `/blyg` or the homepage source. The separate Supabase data remains intact. Do not drop deck tables to roll back frontend code.
+
+## Advisor review
+
+After guest access is enabled, the advisor flags policies applying to anonymous identities. This is intentional: these policies restrict them to their own memberships and invited rooms, and the private room policy denies direct access. The advisor also reports leaked-password protection disabled; this app does not use password sign-in. See https://supabase.com/docs/guides/database/advisors?queryGroups=lint&lint=0012_auth_allow_anonymous_sign_ins and https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection.

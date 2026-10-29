@@ -22,6 +22,7 @@ try {
     clients.push(client);
     const result = await client.auth.signInAnonymously(); ok(result);
     userIds.push(result.data.user!.id);
+    await client.realtime.setAuth(result.data.session!.access_token);
   }
   const [owner, friend, stranger] = clients as [SupabaseClient, SupabaseClient, SupabaseClient];
   const invite = Array.from(crypto.getRandomValues(new Uint8Array(32)), n => n.toString(16).padStart(2, '0')).join('');
@@ -36,17 +37,19 @@ try {
       client.channel(`verify-${name}-${crypto.randomUUID()}`)
         .on('postgres_changes', { event: '*', schema: 'public', table: 'cards_questions', filter: `room_id=eq.${roomId}` }, payload => {
           if (name === 'stranger') outsiderEvents++; else friendEvent?.receive(payload);
-        }).subscribe(status => { if (status === 'SUBSCRIBED') { clearTimeout(timer); resolve(); } });
+        }).subscribe(status => { console.log(`${name} subscription: ${status}`); if (status === 'SUBSCRIBED') { clearTimeout(timer); resolve(); } });
     });
   }
   const questionId = crypto.randomUUID();
   friendEvent = nextEvent();
   ok(await owner.from('cards_questions').insert({ id: questionId, room_id: roomId, text: 'Verification question — disposable test room', author: 'Test owner' }));
   await friendEvent.promise;
+  console.log('Received live event.');
   let read = await friend.from('cards_questions').select('id,text,saved').eq('room_id', roomId); ok(read); assert.equal(read.data!.length, 1);
   friendEvent = nextEvent();
   ok(await friend.from('cards_questions').update({ saved: true }).eq('id', questionId));
   await friendEvent.promise;
+  console.log('Received live event.');
   read = await owner.from('cards_questions').select('id,text,saved').eq('id', questionId); ok(read); assert.equal(read.data![0]!.saved, true);
   const hidden = await stranger.from('cards_questions').select('*').eq('room_id', roomId); ok(hidden); assert.deepEqual(hidden.data, []);
   const denied = await stranger.from('cards_questions').insert({ room_id: roomId, text: 'unauthorized', author: 'Stranger' }); assert.ok(denied.error);

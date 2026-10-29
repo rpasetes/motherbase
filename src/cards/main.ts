@@ -120,6 +120,11 @@ async function connect() {
       const { error } = await client.auth.signInAnonymously();
       if (error) throw error;
     }
+    // Finish binding the guest identity before subscribing; the SDK's auth
+    // notification updates realtime asynchronously on initial sign-in.
+    const { data: activeAuth, error: activeAuthError } = await client.auth.getSession();
+    if (activeAuthError || !activeAuth.session) throw activeAuthError || new Error('missing session');
+    await client.realtime.setAuth(activeAuth.session.access_token);
     const { data, error } = await client.rpc(creating ? 'create_cards_room' : 'join_cards_room', { invite_token: roomToken });
     if (error) throw error;
     roomId = data as string; creating = false;
